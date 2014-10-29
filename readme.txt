@@ -8,7 +8,7 @@ Stable tag: trunk
 License: MIT
 License URI: http://opensource.org/licenses/MIT
 
-The plugin enables every WP site to automatically optimized responsive images for each visitor's screen and serves them from a CDN. 
+Automatically optimizes responsive images for each visitor's screen using Pixtulate's servers and delivers them worldwide over CDN. 
 
 == Description ==
 The responsive images plugin connects wordpress sites to the on demand image services of Pixtulate. Our image optimization dramatically speeds up websites with image content. The service scales, crops and optimizes responsive images on demand using Pixtulate's servers.

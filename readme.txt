@@ -13,9 +13,13 @@ Automatically optimizes responsive images for each visitor's screen using Pixtul
 == Description ==
 The responsive images plugin connects wordpress sites to the on demand image services of Pixtulate. Our image optimization dramatically speeds up websites with image content. The service scales, crops and optimizes responsive images on demand using Pixtulate's servers.
 
+= Features =
+
 Pixtulate provides further image enhancements via focal points which ensure images are always cropped and scaled to feature their main subject. All sites also automatically benefit from Pixtulate's global CDN for fast image delivery worldwide.
 
-The plugin simplifies configuration and automates certain otherwise manual tasks on WP sites. Please visit our docs section for full documentation: http://www.pixtulate.com/docs/index.htm. Immediately start optimizing images by signing up at http://www.pixtulate.com.
+= Docs & Support =
+
+The plugin simplifies configuration and automates certain otherwise manual tasks on WP sites. Please visit our docs section for full [documentation](http://www.pixtulate.com/docs/index.htm). Immediately start optimizing images by [signing up](http://www.pixtulate.com).
 
 == Installation ==
 
@@ -24,7 +28,7 @@ The plugin simplifies configuration and automates certain otherwise manual tasks
 2. Activate the Pixtulate plugin from the 'Plugins' menu in WordPress
 
 = Before First Use =
-1. Signup for an account at http://www.pixtulate.com/signup
+1. [Signup](http://www.pixtulate.com/signup) for an account
 2. Complete the signup process and register your desired domain name
 3. Come back to the plugin settings page in your WordPress installation and enter your domain name
 4. Select your desired HTTP connector location from the dropdown menu and press 'Update'. All images paths will be relative from this location.

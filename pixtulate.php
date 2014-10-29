@@ -1,9 +1,9 @@
-<?
+<?php
 /**
  * Plugin Name: Pixtulate
  * Plugin URI: http://www.pixtulate.com/wordpress-plugin
  * Description: A brief description of the Plugin.
- * Version: 0.02
+ * Version: 1.00
  * Author: Pixtulate
  * Author URI: https://www.pixtulate.com
  * License: GPL2
@@ -43,20 +43,31 @@
 
 defined('ABSPATH') or die("No script kiddies please!");  //don't let people call this script directly
 
-define('PIXTULATE_VERSION', '0.02');
+define('PIXTULATE_VERSION', '1.00');
 define('PIXTULATE_PLUGIN_URL', plugin_dir_url( __FILE__ ));
 
 load_plugin_textdomain( 'pixtulate', false, basename( dirname( __FILE__ ) ) . '/languages' );  //for localization
 
 //let's create the admin page
 
+add_action('admin_init', 'pixtulate_init');
 add_action('admin_menu', 'pixtulate_add_options_page');
 
+function pixtulate_init() {
+	wp_register_style( 'pixtulateCSS', plugins_url('css/pixtulate_style.css', __FILE__)); 
+	wp_register_script( 'jQueryPixtulate', plugins_url('js/jquery.min.js', __FILE__)); 
+	wp_register_script( 'pixtulateJS', plugins_url('js/pixtulate_admin.js', __FILE__)); 
+}
+
 function pixtulate_add_options_page() {
-	add_options_page("Pixtulate", "Pixtulate Settings", "manage_options", __FILE__, "pixtulate_settings");
+	add_options_page("Pixtulate", "<img src='". PIXTULATE_PLUGIN_URL ."/images/pixtulate_sb.jpg' alt='' style='margin-bottom:-4px; padding-right:2px;' />Pixtulate", "manage_options", __FILE__, "pixtulate_settings");
 }
 
 function pixtulate_settings() {		
+	
+	wp_enqueue_style( 'pixtulateCSS' );
+	wp_enqueue_script( 'jQueryPixtulate' );
+	wp_enqueue_script( 'pixtulateJS' );
 	
 	if( isset( $_POST['pixtulate_update_settings'] ) ) {
 		
@@ -66,93 +77,121 @@ function pixtulate_settings() {
 	  	}
 		
 		$pixtulate_domain 				= sanitize_text_field( $_POST['pixtulate_domain'] );
-		$pixtulate_modifyurl 			= sanitize_text_field( $_POST['pixtulate_modifyurl'] );
 		$pixtulate_constrain 			= sanitize_text_field( $_POST['pixtulate_constrain'] );
 		$pixtulate_https 				= sanitize_text_field( $_POST['pixtulate_https'] );
 		$pixtulate_rendering 			= sanitize_text_field( $_POST['pixtulate_rendering'] );
 		$pixtulate_deactivate_for_admin = sanitize_text_field( $_POST['pixtulate_deactivate_for_admin'] );
+		$pixtulate_connector 			= sanitize_text_field( $_POST['pixtulate_connector'] );
 		
 		update_option ( 'pixtulate_domain',    				$pixtulate_domain 			    );
-		update_option ( 'pixtulate_modifyurl',    			$pixtulate_modifyurl 			);
 		update_option ( 'pixtulate_constrain',    			$pixtulate_constrain 			);
 		update_option ( 'pixtulate_https',    				$pixtulate_https 			    );
 		update_option ( 'pixtulate_rendering', 				$pixtulate_rendering 		    );
 		update_option ( 'pixtulate_deactivate_for_admin', 	$pixtulate_deactivate_for_admin );
+		update_option ( 'pixtulate_connector',    			$pixtulate_connector 			);
 
 		echo '<div id="message" class="updated fade"><p><strong>Settings saved.</strong></div>';
 	} else {
 		
 		$pixtulate_domain 				= get_option ( 'pixtulate_domain' );
-		$pixtulate_modifyurl 			= get_option ( 'pixtulate_modifyurl' );
 		$pixtulate_constrain 			= get_option ( 'pixtulate_constrain' );
 		$pixtulate_https 				= get_option ( 'pixtulate_https' );
 		$pixtulate_rendering 			= get_option ( 'pixtulate_rendering' );
 		$pixtulate_deactivate_for_admin = get_option ( 'pixtulate_deactivate_for_admin' );
+		$pixtulate_connector 			= get_option ( 'pixtulate_connector' );
 		
-	}                                                                                
-	
-	
-	
+	}                 
+
 	?>
 	
+	
+		
 	<div class="wrap">
-		<a href="https://www.pixtulate.com" target="_blank" /><img src="http://demo.api.pixtulate.com/pixtulate-blue.png?w=300" alt="Pixtulate" title="Pixtulate" /></a>
-		<div style="width: 600px; margin: 10px 0; padding: 15px; background: #e1e1e1"> 
-		Sign up for an account at <a href="http://www.pixtulate.com/signup" target="_blank">Pixtulate</a> and make all your images responsive in less than 60 seconds. Your images will be processed on demand by Pixtulate's servers to match your visitors' exact needs and cached worldwide by our CDN.
-		</div>
-		<h2><?php _e('Pixtulate Settings', 'pixtulate') ?></h2>
 		<form method="post" action="">
-			<p><strong><?php _e( 'Please define your settings.', 'pixtulate' ); ?></strong></p>
-
-			<div id="pixtulate_settings_div">
-											
+		<div class="row01">
+			<div class="col01">		
+				<a href="https://www.pixtulate.com" target="_blank" /><img src="http://demo.api.pixtulate.com/pixtulate-blue.png?w=300" alt="Pixtulate" title="Pixtulate" /></a>
+			</div>
+			<div class="col02">
+				<strong>Responsive Images on Demand</strong> <br />
+				<em>Crop, Scale & Optimize Images in the Cloud</em>
+			</div>
+		</div>
+		<div class="row02">
+			<h2>Account & Connector Settings</h2>
+			<div class="col01">
+				<p class="error">There was a problem updating your connector's configuration. Please make sure to sign up for Pixtulate before configuring the plugin</p>
 				<p id="pixtulate_domain_input">
-				  <label for="pixtulate_domain"><?php _e('Type in your Pixtulate Domain:', 'pixtulate'); ?> </label><input type="text" name="pixtulate_domain" value="<?php echo $pixtulate_domain; ?>" />
+				  <label for="pixtulate_domain"><?php _e('Domain', 'pixtulate'); ?> <span class="req">*</span> </label><br />
+				  <input type="text" name="pixtulate_domain" id="pixtulate_domain" value="<?php echo $pixtulate_domain; ?>" />
 				</p>
-				<p id="pixtulate_modifyurl_input">
-				  <?php _e('Modify inconsistent URL format structures?', 'pixtulate'); ?> <input type="radio" name="pixtulate_modifyurl" value="true" <?php echo ( $pixtulate_modifyurl == 'true' ? 'checked' : '' ); ?>/> <label for="pixtulate_modifyurl_true"><?php _e('Yes', 'pixtulate'); ?> </label>
-				  <input type="radio" name="pixtulate_modifyurl" value="false" <?php echo ( $pixtulate_modifyurl == 'false' ? 'checked' : '' ); ?>/> <label for="pixtulate_modifyurl_false"><?php _e('No', 'pixtulate'); ?> </label>
+				<p id="pixtulate_connector">
+				  <label for="pixtulate_connect"><?php _e('HTTP Connector Path', 'pixtulate'); ?> <span class="req">*</span> </label> <br />
+				  <select name="pixtulate_connector" id="pixtulate_connector">
+					<option value="<?php echo site_url(); ?>"><?php echo site_url(); ?></option>
+					<option value="<?php echo site_url(); ?>/wp-content/uploads/"><?php echo site_url(); ?>/wp-content/uploads</option>
+				  </select> <a href="https://github.com/pixtulate/pixtulate.js" target="_blank"><img src="<?php echo PIXTULATE_PLUGIN_URL; ?>/images/qlinks.jpg" alt="Pixtulate" title="Pixtulate" /></a>
 				</p>
+				<input type="button" name="pixtulate_connector_submit" id="connector_test" value="<?php _e('Update Connector', 'pixtulate'); ?>" class="button-primary" />
+			</div>
+			<div class="col02">
+				<a href="http://www.pixtulate.com/signup" target="_blank">Signup with Pixtulate</a> and make all <br />your images responsive in less than <br /> 60 seconds.
+			</div>
+		</div>
+		<div class="row03">
+			<h2>Plugin Settings</h2>
+			<div class="col01">				 
 				<p id="pixtulate_constrain_input">
-				  <?php _e('Constrain image dimensions for mobile devices?', 'pixtulate'); ?> <input type="radio" name="pixtulate_constrain" value="true" <?php echo ( $pixtulate_constrain == 'true' ? 'checked' : '' ); ?>/> <label for="pixtulate_constrain_true"><?php _e('Yes', 'pixtulate'); ?> </label>
-				  <input type="radio" name="pixtulate_constrain" value="false" <?php echo ( $pixtulate_constrain == 'false' ? 'checked' : '' ); ?>/> <label for="pixtulate_constrain_false"><?php _e('No', 'pixtulate'); ?> </label>
+				  <input type="checkbox" name="pixtulate_constrain" checked value="true" <?php echo ( $pixtulate_constrain == 'true' ? 'checked' : '' ); ?>/> <?php _e('Make maximum image width equal to visitor\'s screen width', 'pixtulate'); ?> <a href="https://github.com/pixtulate/pixtulate.js" target="_blank"><img src="<?php echo PIXTULATE_PLUGIN_URL; ?>/images/qlinks.jpg" alt="Pixtulate" title="Pixtulate" /></a> 
 				</p>
 				<p id="pixtulate_https_input">
-				  <?php _e('Enable HTTPS for all images?', 'pixtulate'); ?> <input type="radio" name="pixtulate_https" value="true" <?php echo ( $pixtulate_https == 'true' ? 'checked' : '' ); ?>/> <label for="pixtulate_https_true"><?php _e('Yes', 'pixtulate'); ?> </label>
-				  <input type="radio" name="pixtulate_https" value="false" <?php echo ( $pixtulate_https == 'false' ? 'checked' : '' ); ?>/> <label for="pixtulate_https_false"><?php _e('No', 'pixtulate'); ?> </label>
+				  <input type="checkbox" name="pixtulate_https" value="true" <?php echo ( $pixtulate_https == 'true' ? 'checked' : '' ); ?>/> <?php _e('Force SSL encryption of images (https)', 'pixtulate'); ?> <a href="https://github.com/pixtulate/pixtulate.js" target="_blank"><img src="<?php echo PIXTULATE_PLUGIN_URL; ?>/images/qlinks.jpg" alt="Pixtulate" title="Pixtulate" /></a>
 				</p>
+				<br />
 				<p id="pixtulate_rendering_input">
-				  <?php _e('Which pictures should be rendered through Pixtulate?', 'pixtulate'); ?><br/>
-				  <input type="radio" name="pixtulate_rendering" value="pages" <?php echo ( $pixtulate_rendering == 'page' ? 'checked' : '' ); ?>/> <label for="pixtulate_rendering_pages"><?php _e('Only Pictures included in Pages', 'pixtulate'); ?> </label> <br/>
-				  <input type="radio" name="pixtulate_rendering" value="posts" <?php echo ( $pixtulate_rendering == 'posts' ? 'checked' : '' ); ?>/> <label for="pixtulate_rendering_posts"><?php _e('Only Pictures included in Posts', 'pixtulate'); ?> </label> <br/>
-				  <input type="radio" name="pixtulate_rendering" value="sitewide" <?php echo ( $pixtulate_rendering == 'sitewide' ? 'checked' : '' ); ?>/> <label for="pixtulate_rendering_sitewide"><?php _e('Every picture on my site', 'pixtulate'); ?> </label> <br/>
-				</p>
+				  <strong>Which images should be processed by Pixtulate?</strong><br />
+				  <input type="radio" name="pixtulate_rendering" value="pages" <?php echo ( $pixtulate_rendering == 'page' ? 'checked' : '' ); ?>/> <label for="pixtulate_rendering_pages"><?php _e('Images on Pages', 'pixtulate'); ?> </label> <br/>
+				  <input type="radio" name="pixtulate_rendering" value="posts" <?php echo ( $pixtulate_rendering == 'posts' ? 'checked' : '' ); ?>/> <label for="pixtulate_rendering_posts"><?php _e('Images on Posts', 'pixtulate'); ?> </label> <br/>
+				  <input type="radio" name="pixtulate_rendering" value="sitewide" <?php echo ( $pixtulate_rendering == 'sitewide' ? 'checked' : '' ); ?>/> <label for="pixtulate_rendering_sitewide"><?php _e('All images on my site', 'pixtulate'); ?> </label> <br/>
+				</p>			
+				
 				<p id="pixtulate_deactivate_for_admin_input">
-				  <?php _e('Deactivate Pixtulate for users that are logged in?', 'pixtulate'); ?><br/>
+  				  <strong>Deactivate Pixtulate for users that are logged in?</strong><br />
 				  <input type="radio" name="pixtulate_deactivate_for_admin" value="1" <?php echo ( $pixtulate_deactivate_for_admin == '1' ? 'checked' : '' ); ?>/> <label for="pixtulate_deactivate_for_admin_1"><?php _e('Yes', 'pixtulate'); ?> </label> <br/>
 				  <input type="radio" name="pixtulate_deactivate_for_admin" value="0" <?php echo ( $pixtulate_deactivate_for_admin == '0' ? 'checked' : '' ); ?>/> <label for="pixtulate_deactivate_for_admin_0"><?php _e('No', 'pixtulate'); ?> </label> <br/>
 				</p>
-				<p>&nbsp;</p>
-			</div>
 
-			<p id="pixtulate_settings_submit">
-				<input type="submit" name="pixtulate_settings_submit" value="<?php _e('Save Settings', 'pixtulate'); ?>" class="button-primary" />
-				<input type="hidden" name="pixtulate_update_settings" value="1" />
-				<?php wp_nonce_field( plugin_basename(__FILE__), 'pixtulate_admin_nonce' ); ?>
+				<p id="pixtulate_settings_submit">
+					<input type="submit" name="pixtulate_settings_submit" value="<?php _e('Save Settings', 'pixtulate'); ?>" class="button-primary" />
+					<input type="hidden" name="pixtulate_update_settings" value="1" />
+					<?php wp_nonce_field( plugin_basename(__FILE__), 'pixtulate_admin_nonce' ); ?>
+					
+				</p>
 				
-			</p>
+			</div>
+			<div class="col02">
+				<img src="<?php echo PIXTULATE_PLUGIN_URL; ?>/images/resolutions.png" alt="Pixtulate" title="Pixtulate" /> 
+				<p>
+				Your images will be processed on demand by Pixtulate's servers to match your visitor's exact needs and cached worldwide by our CDN.
+				</p>
+			</div>
+		</div>
+		<div class="row04">
+			&copy; Pixtulate, 2015. All Rights Reserved. Plugin Version 1.00 <span><a href="http://www.pixtulate.com" target="_blank">Pixtulate</a> | <a href="http://pixtulate.com/docs/index.htm" target="_blank">Docs</a> | <a href="https://pixtulate.desk.com/">Support</a> | <a href="https://wordpress.org/plugins/pixtulate-responsive-images/" target="_blank">WP Plugin</a> | <a href="https://twitter.com/pixtulate" target="_blank">Twitter</a></span>
+		</div>	
+		</form>
+											
 			
 		</form>
 	</div>
 	
-	<?
+	<?php
 	
 }
 
 //end admin page
 
 //include the javascript
-
 add_filter( 'wp_print_scripts', 'pixtulate_javascript', 0);
 function pixtulate_javascript() {
 	
@@ -170,19 +209,25 @@ function pixtulate_javascript() {
 add_filter('wp_footer', 'pixtulate_func');
 function pixtulate_func() {
 	$pixtulate_domain = get_option ( 'pixtulate_domain' );
-	$pixtulate_modifyurl = get_option ( 'pixtulate_modifyurl' );
+	$pixtulate_modifyurl = "true";
 	$pixtulate_constrain = get_option ( 'pixtulate_constrain' );
-	$pixtulate_https = get_option ( 'pixtulate_https' );
+	$pixtulate_https = get_option ( 'pixtulate_https' ); 
 	
-	echo '<script> pixtulate("'. $pixtulate_domain .'",'. $pixtulate_modifyurl .','. $pixtulate_constrain .','. $pixtulate_https .'); </script><br />';
+	if($pixtulate_constrain == '') 
+		$pixtulate_constrain = "false"; 
+		
+	if($pixtulate_https == '') 
+		$pixtulate_https = "false"; 
+	
+	echo '<script> pixtulate("'. $pixtulate_domain .'",'. $pixtulate_modifyurl .','. $pixtulate_constrain .','. $pixtulate_https .'); </script>';
 }
 
 add_action('wp_head', 'pixtulate_buffer_start');
 add_action('wp_footer', 'pixtulate_buffer_end');
 	
 function pixtulate_callback($buffer) {
+
   // modify buffer here, and then return the updated code
-  
   return pixtulate_filter ( $buffer ); //replace src with data-src in entire page
 
 }
@@ -190,6 +235,7 @@ function pixtulate_callback($buffer) {
 function pixtulate_buffer_start() { 
 	
 	$pixtulate_domain = get_option ( 'pixtulate_domain' );
+	$pixtulate_deactivate_for_admin = get_option ( 'pixtulate_deactivate_for_admin' );
 	
 	if ( ( is_user_logged_in() && $pixtulate_deactivate_for_admin == 1 ) || ! $pixtulate_domain ) 
 		return;
@@ -203,6 +249,7 @@ function pixtulate_buffer_start() {
 function pixtulate_buffer_end() { 
 	
 	$pixtulate_domain = get_option ( 'pixtulate_domain' );
+	$pixtulate_deactivate_for_admin = get_option ( 'pixtulate_deactivate_for_admin' );
 	
 	if ( ( is_user_logged_in() && $pixtulate_deactivate_for_admin == 1 ) || ! $pixtulate_domain ) 
 		return;
@@ -214,7 +261,7 @@ function pixtulate_buffer_end() {
 		
 }
 
-add_filter( 'the_content', 'pixtulate_modify_content' );
+add_filter( 'wp_head', 'pixtulate_modify_content' );
 
 function pixtulate_modify_content ( $content ) {
 		
@@ -240,7 +287,17 @@ function pixtulate_modify_content ( $content ) {
  * Replaces the src with data-src in all image tags it can find
  */
 function pixtulate_filter ( $content ) {
-	return preg_replace("/(src=\")(.*)([0-9]{4})/", "data-$1$3", $content);
+	
+	$pixtulate_connector = get_option ( 'pixtulate_connector' );
+	$base_url = get_site_url();
+			
+	$base_url_arr = parse_url($base_url);
+	$base_url_mod = $base_url_arr[scheme]. '\:\/\/' .$base_url_arr[host]. '\\' .$base_url_arr[path];
+	
+	if($pixtulate_connector == $base_url) 
+		return preg_replace("/(src=\")(.*)([^>]*)(".$base_url_mod."\/)/", "data-$1$3", $content);
+	else 
+		return preg_replace("/(src=\")(.*)([0-9]{4})/", "data-$1$3", $content);
 }
 
 

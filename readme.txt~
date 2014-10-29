@@ -29,7 +29,7 @@ The plugin simplifies configuration and automates certain otherwise manual tasks
 3. Come back to the plugin settings page in your WordPress installation and enter your domain name
 4. Select your desired HTTP connector location from the dropdown menu and press 'Update'. All images paths will be relative from this location.
 5. Select what kids of images you want Pixtulate to optimize and your SSL settings
-6. When done, press 'Update'
+6. When done, press 'Update'. Done.
 
 == Frequently Asked Questions ==
 

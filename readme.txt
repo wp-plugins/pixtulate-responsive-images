@@ -11,7 +11,7 @@ License URI: http://opensource.org/licenses/MIT
 Automatically optimizes responsive images for each visitor's screen using Pixtulate's servers and delivers them worldwide over CDN. 
 
 == Description ==
-The responsive images plugin connects wordpress sites to the on demand image services of Pixtulate. Our image optimization dramatically speeds up websites with image content. The service scales, crops and optimizes responsive images on demand using Pixtulate's servers.
+The responsive images plugin connects wordpress sites to the on demand image services of [Pixtulate](http://www.pixtulate.com). Our image optimization dramatically speeds up websites with image content. The service scales, crops and optimizes responsive images on demand using Pixtulate's servers.
 
 = Features =
 
@@ -19,7 +19,7 @@ Pixtulate provides further image enhancements via focal points which ensure imag
 
 = Docs & Support =
 
-The plugin simplifies configuration and automates certain otherwise manual tasks on WP sites. Please visit our docs section for full [documentation](http://www.pixtulate.com/docs/index.htm). Immediately start optimizing images by [signing up](http://www.pixtulate.com).
+The plugin simplifies configuration and automates certain otherwise manual tasks on WP sites. Please visit our docs section for full [documentation](http://www.pixtulate.com/docs/index.htm). Immediately start optimizing images by [signing up](http://www.pixtulate.com/signup/#?source=wordpress).
 
 == Installation ==
 
@@ -28,7 +28,7 @@ The plugin simplifies configuration and automates certain otherwise manual tasks
 2. Activate the Pixtulate plugin from the 'Plugins' menu in WordPress
 
 = Before First Use =
-1. [Signup](http://www.pixtulate.com/signup) for an account
+1. [Signup](http://www.pixtulate.com/signup/#?source=wordpress) for an account
 2. Complete the signup process and register your desired domain name
 3. Come back to the plugin settings page in your WordPress installation and enter your domain name
 4. Select your desired HTTP connector location from the dropdown menu and press 'Update'. All images paths will be relative from this location.
@@ -36,12 +36,31 @@ The plugin simplifies configuration and automates certain otherwise manual tasks
 6. When done, press 'Update'
 
 == Frequently Asked Questions ==
+**What do I put in the 'Domain' field?**
+
+Only enter the name of the domain your registered, not the full host. For example, only enter "mydomain"and not mydomain.api.pixtulate.com
+
+**What does the option 'Ignore default image dimensions (Recommended)' actually do?**
+
+Wordpress by default embeds the image's original height and width as attributes on the <img> element. Selecting this option removes those attributes so that the image is free t be scaled accorrding to the layout's dimensions by Pixtulate, thereby renddering your images responsive.
+
+**How do I actually make my images responsive?**
+
+Simply add a media item to your page or post from your media library. This items should be of the best quality and highest resolution possible. No need to pre-scale or thumbnail beforehand. That's it. The image will be scaled to fit the area where it's located.
 
 == Screenshots ==
 
-== Changelog ==
+1. Plugin admin area. From here you can directly configure your connector settings and plugin options.
 
-= 1.00 =
+== Changelog ==
+= 1.1 =
+* Combined JSON update and Plugin Settings into one form submission
+* Added Tooltips for key items
+* Added ability to ignore default image attribute dimensions
+* Fixed Misc. Bugs pertaining to the Javascript include
+* Minor cosmetic changes
+
+= 1.0 =
 * Added JSON update for connector configuration
 * Added new layout format to admin page
 * Updated data-src regex to handle a multitude of path types 

@@ -1,6 +1,6 @@
 /** Pixtulate WordPress Plugin **/
 
-.wrap { max-width: 800px; width: 100%; color: #747474; }
+.wrap { max-width: 800px; width: 100%; color: #747474; position: relative; }
 .wrap .col01, .wrap .col02 { display: inline-block; vertical-align: top; }
 
 span.req { color: red; }
@@ -32,3 +32,5 @@ span.req { color: red; }
 .row04 span { margin-left: 207px; }
 
 p.error { color: red; padding: 15px 0; display: none; }
+
+.pixt_tooltip { background: #333; color: #fff; font-size: 13px; border: 1px solid #ADF0FF; max-width: 200px; width: auto; height: auto; padding: 12px; display: none; border-radius: 6px; }

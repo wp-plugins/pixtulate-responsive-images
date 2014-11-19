@@ -28,7 +28,7 @@
  * @param constrainDimensions
  * @param https
  */
-function pixtulate(domainName, modifyURL, constrainDimensions, https) {
+function pixtulate(domainName, modifyURL, modifyImageDimensions, constrainDimensions, https) {
   
   var protocol = "http";
   
@@ -66,6 +66,12 @@ function pixtulate(domainName, modifyURL, constrainDimensions, https) {
       var origSrc = img[i].getAttribute("data-src") || img[i].src;
       var newSrc;
 	  
+	  // removes image width and height
+	  if(modifyImageDimensions && modifyImageDimensions !== "undefined") {
+		img[i].removeAttribute("width");
+		img[i].removeAttribute("height");
+	  }
+	  
 	  if(origSrc.indexOf("localhost") > -1) {
 		var s = origSrc.substr(/localhost/g, ''); 
         newSrc += s;	 
@@ -84,6 +90,7 @@ function pixtulate(domainName, modifyURL, constrainDimensions, https) {
       }
 	  
       var parent = img[i].parentNode;
+	  
       if (parent !== null && parent.nodeName !== "BODY") {
         imgCW = img[i].getAttribute("width");
         if (img[i].getAttribute("width") || img[i].getAttribute("height")) {
@@ -109,8 +116,13 @@ function pixtulate(domainName, modifyURL, constrainDimensions, https) {
             }
           } else {
 				if(!constrain) {
-					imgCW = img[i].getAttribute("width") || parseInt(window.getComputedStyle(parent).getPropertyValue("width"));
-					imgCH = img[i].getAttribute("height") || parseInt(window.getComputedStyle(parent).getPropertyValue("height"));
+					  if(parent.nodeName == "A") {
+						imgCW = img[i].getAttribute("width") || parseInt(window.getComputedStyle(parent.parentNode).getPropertyValue("width"));
+						imgCH = img[i].getAttribute("height") || parseInt(window.getComputedStyle(parent.parentNode).getPropertyValue("height"));
+					  } else {				
+						imgCW = img[i].getAttribute("width") || parseInt(window.getComputedStyle(parent).getPropertyValue("width"));
+						imgCH = img[i].getAttribute("height") || parseInt(window.getComputedStyle(parent).getPropertyValue("height"));
+					  }
 				} else {
 					imgCW = img[i].getAttribute("width") || viewportW;
 					imgCH = img[i].getAttribute("height") || viewportH;

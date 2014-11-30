@@ -53,6 +53,10 @@ Simply add a media item to your page or post from your media library. This items
 1. Plugin admin area. From here you can directly configure your connector settings and plugin options.
 
 == Changelog ==
+= 1.1.1=
+* Ehm...very emberrasing issue with post path of form on plugin config page
+* Removed jquery dependency since WP already provides it by default
+
 = 1.1 =
 * Combined JSON update and Plugin Settings into one form submission
 * Added Tooltips for key items

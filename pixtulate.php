@@ -53,7 +53,6 @@ add_action('admin_menu', 'pixtulate_add_options_page');
 
 function pixtulate_init() {
 	wp_register_style( 'pixtulateCSS', plugins_url('css/pixtulate_style.css', __FILE__)); 
-	wp_register_script( 'jQueryPixtulate', plugins_url('js/jquery.min.js', __FILE__)); 
 	wp_register_script( 'pixtulateJS', plugins_url('js/pixtulate_admin.js', __FILE__)); 
 }
 
@@ -113,7 +112,7 @@ function pixtulate_settings() {
 	
 		
 	<div class="wrap">
-		<form id="pixtForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>?page=pixtulate/pixtulate.php" method="post">
+		<form id="pixtForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>?page=pixtulate-responsive-images/pixtulate.php" method="post">
 		<div class="row01">
 			<div class="col01">		
 				<a href="https://www.pixtulate.com" target="_blank" /><img src="http://demo.api.pixtulate.com/pixtulate-blue.png?w=300" alt="Pixtulate" title="Pixtulate" /></a>

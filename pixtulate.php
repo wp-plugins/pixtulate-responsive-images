@@ -1,36 +1,28 @@
 <?php
 /**
  * Plugin Name: Pixtulate
- * Plugin URI: https://wordpress.org/plugins/pixtulate-responsive-images/
+ * Plugin URI: http://www.pixtulate.com/wordpress-plugin
  * Description: The responsive images plugin connects wordpress sites to the on demand image services of Pixtulate. Our image optimization dramatically speeds up websites with image content. The service scales, crops and optimizes responsive images on demand using Pixtulate's servers.
- * Version: 1.1
+ * Version: 1.2
  * Author: Pixtulate
- * Author URI: http://www.pixtulate.com
- * License: MIT
+ * Author URI: https://www.pixtulate.com
+ * License: GPL2
  */
 
-/* 
-   	The MIT License (MIT)
+/*  Copyright 2014  Philipp Reichardt  (email : webmaster@pixtulate.com)
 
-	Copyright (c) 2015 Pixtulate
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License, version 2, as 
+    published by the Free Software Foundation.
 
-	Permission is hereby granted, free of charge, to any person obtaining a copy
-	of this software and associated documentation files (the "Software"), to deal
-	in the Software without restriction, including without limitation the rights
-	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	copies of the Software, and to permit persons to whom the Software is
-	furnished to do so, subject to the following conditions:
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
 
-	The above copyright notice and this permission notice shall be included in
-	all copies or substantial portions of the Software.
-
-	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	THE SOFTWARE.
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
 /*
@@ -41,7 +33,7 @@
 
 defined('ABSPATH') or die("No script kiddies please!");  //don't let people call this script directly
 
-define('PIXTULATE_VERSION', '1.1');
+define('PIXTULATE_VERSION', '1.2');
 define('PIXTULATE_PLUGIN_URL', plugin_dir_url( __FILE__ ));
 
 load_plugin_textdomain( 'pixtulate', false, basename( dirname( __FILE__ ) ) . '/languages' );  //for localization
@@ -63,9 +55,8 @@ function pixtulate_add_options_page() {
 function pixtulate_settings() {		
 	
 	wp_enqueue_style( 'pixtulateCSS' );
-	wp_enqueue_script( 'jQueryPixtulate' );
 	wp_enqueue_script( 'pixtulateJS' );
-	
+		
 	if( isset( $_POST['pixtulate_update_settings'] ) ) {
 		
 		if ( !wp_verify_nonce( $_POST['pixtulate_admin_nonce'], plugin_basename(__FILE__) ) || ! current_user_can('administrator') ) {
@@ -101,11 +92,6 @@ function pixtulate_settings() {
 		$pixtulate_connector 			= get_option ( 'pixtulate_connector' );
 		$pixtulate_modifyimage			= get_option ( 'pixtulate_modifyimage' ); 
 		
-		if($pixtulate_modifyimage == null || $pixtulate_constrain == null || $pixtulate_rendering == null) {
-			$pixtulate_constrain = true;
-			$pixtulate_modifyimage = true;
-			$pixtulate_rendering = 'sitewide';
-		}
 	}                 
 
 	?>
@@ -145,34 +131,46 @@ function pixtulate_settings() {
 				</p>
 			</div>
 			<div class="col02">
-				<a href="http://www.pixtulate.com/signup/#?source=wordpress" target="_blank">Signup with Pixtulate</a> and make all <br />your images responsive in less than <br /> 60 seconds.
+				<a href="http://www.pixtulate.com/signup" target="_blank">Signup with Pixtulate</a> and make all <br />your images responsive in less than <br /> 60 seconds.
 			</div>
 		</div>
 		<div class="row03">
 			<h2>Plugin Settings</h2>
 			<div class="col01">				 
 				<p id="pixtulate_constrain_input">
-				  <input type="checkbox" name="pixtulate_constrain" value="true" id="pixtulate_max_width" <?php echo ( $pixtulate_constrain == 'true' ? 'checked' : '' ); ?>/> <label for="pixtulate_max_width"><?php _e('Make maximum image width equal to visitor\'s screen width', 'pixtulate'); ?></label> <img src="<?php echo PIXTULATE_PLUGIN_URL; ?>/images/qlinks.jpg" alt="Pixtulate" title="Pixtulate" class="tooltip01" /> 
+					<?php if(!$pixtulate_domain): ?>
+						<input type="checkbox" name="pixtulate_constrain" id="pixtulate_max_width" checked value="true" <?php echo ( $pixtulate_constrain == 'true' ? 'checked' : '' ); ?>/> <label for="pixtulate_max_width"><?php _e('Make maximum image width equal to visitor\'s screen width', 'pixtulate'); ?></label> <img src="<?php echo PIXTULATE_PLUGIN_URL; ?>/images/qlinks.jpg" alt="Pixtulate" title="Pixtulate" class="tooltip01" /> 
+					<?php else: ?>
+						<input type="checkbox" name="pixtulate_constrain" id="pixtulate_max_width" value="true" <?php echo ( $pixtulate_constrain == 'true' ? 'checked' : '' ); ?>/> <label for="pixtulate_max_width"><?php _e('Make maximum image width equal to visitor\'s screen width', 'pixtulate'); ?></label> <img src="<?php echo PIXTULATE_PLUGIN_URL; ?>/images/qlinks.jpg" alt="Pixtulate" title="Pixtulate" class="tooltip01" /> 
+					<?php endif; ?>
 				</p>
 				<p id="pixtulate_modimage_input">
-				  <input type="checkbox" name="pixtulate_modifyimage" value="true" id="pixtulate_image_mod" <?php echo ( $pixtulate_modifyimage == 'true' ? 'checked' : '' ); ?>/> <label for="pixtulate_image_mod"><?php _e('Ignore default image dimensions (Recommended)', 'pixtulate'); ?></label> <img src="<?php echo PIXTULATE_PLUGIN_URL; ?>/images/qlinks.jpg" alt="Pixtulate" title="Pixtulate" class="tooltip02" /> 
+					<?php if(!$pixtulate_domain): ?>
+						<input type="checkbox" name="pixtulate_modifyimage" id="pixtulate_image_mod" checked value="true" <?php echo ( $pixtulate_modifyimage == 'true' ? 'checked' : '' ); ?>/> <label for="pixtulate_image_mod"><?php _e('Ignore default image dimensions (Recommended)', 'pixtulate'); ?></label> <img src="<?php echo PIXTULATE_PLUGIN_URL; ?>/images/qlinks.jpg" alt="Pixtulate" title="Pixtulate" class="tooltip02" /> 
+					<?php else: ?>
+						<input type="checkbox" name="pixtulate_modifyimage" id="pixtulate_image_mod" value="true" <?php echo ( $pixtulate_modifyimage == 'true' ? 'checked' : '' ); ?>/> <label for="pixtulate_image_mod"><?php _e('Ignore default image dimensions (Recommended)', 'pixtulate'); ?></label> <img src="<?php echo PIXTULATE_PLUGIN_URL; ?>/images/qlinks.jpg" alt="Pixtulate" title="Pixtulate" class="tooltip02" /> 
+					<?php endif; ?>
 				</p>
 				<p id="pixtulate_https_input">
 				  <input type="checkbox" name="pixtulate_https" id="pixtulate_ssl" value="true" <?php echo ( $pixtulate_https == 'true' ? 'checked' : '' ); ?>/> <label for="pixtulate_ssl"><?php _e('Force SSL encryption of images (https)', 'pixtulate'); ?></label> <img src="<?php echo PIXTULATE_PLUGIN_URL; ?>/images/qlinks.jpg" alt="Pixtulate" title="Pixtulate" class="tooltip03" />
 				</p>
 				<br />
 				<p id="pixtulate_rendering_input">
-				  <strong>Which images should be processed by Pixtulate?</strong> <br /> 
-				  <input type="radio" name="pixtulate_rendering" id="pixtulate_rendering_posts" value="posts" <?php echo ( $pixtulate_rendering == 'posts' ? 'checked' : '' ); ?>/> <label for="pixtulate_rendering_posts"><?php _e('Images on Pages and Posts', 'pixtulate'); ?> </label> 
-				  <img src="<?php echo PIXTULATE_PLUGIN_URL; ?>/images/qlinks.jpg" alt="Pixtulate" title="Pixtulate" class="tooltip04" /> <br/>
-				  <input type="radio" name="pixtulate_rendering" id="pixtulate_rendering_sitewide" value="sitewide" <?php echo ( $pixtulate_rendering == 'sitewide' ? 'checked' : '' ); ?>/> <label for="pixtulate_rendering_sitewide"><?php _e('All images on my site', 'pixtulate'); ?> </label> 
-				 <img src="<?php echo PIXTULATE_PLUGIN_URL; ?>/images/qlinks.jpg" alt="Pixtulate" title="Pixtulate" class="tooltip05" /> <br/>
+					<strong>Which images should be processed by Pixtulate?</strong> <br /> 
+					<input type="radio" name="pixtulate_rendering" id="pixtulate_rendering_posts" value="posts" <?php echo ( $pixtulate_rendering == 'posts' ? 'checked' : '' ); ?>/> <label for="pixtulate_rendering_posts"><?php _e('Images on Pages and Posts', 'pixtulate'); ?> </label> 
+					<img src="<?php echo PIXTULATE_PLUGIN_URL; ?>/images/qlinks.jpg" alt="Pixtulate" title="Pixtulate" class="tooltip04" /> <br/>
+					<?php if(!$pixtulate_domain): ?>
+						<input type="radio" name="pixtulate_rendering" id="pixtulate_rendering_sitewide" checked value="sitewide" <?php echo ( $pixtulate_rendering == 'sitewide' ? 'checked' : '' ); ?>/> <label for="pixtulate_rendering_sitewide"><?php _e('All images on my site', 'pixtulate'); ?> </label> 
+					<?php else: ?>
+						<input type="radio" name="pixtulate_rendering" id="pixtulate_rendering_sitewide" value="sitewide" <?php echo ( $pixtulate_rendering == 'sitewide' ? 'checked' : '' ); ?>/> <label for="pixtulate_rendering_sitewide"><?php _e('All images on my site', 'pixtulate'); ?> </label> 
+					<?php endif; ?>
+					<img src="<?php echo PIXTULATE_PLUGIN_URL; ?>/images/qlinks.jpg" alt="Pixtulate" title="Pixtulate" class="tooltip05" /> <br/>
 				</p>			
 				
 				<p id="pixtulate_deactivate_for_admin_input">
-  				  <strong>Deactivate Pixtulate for users that are logged in?</strong><br />
-				  <input type="radio" name="pixtulate_deactivate_for_admin" value="1" <?php echo ( $pixtulate_deactivate_for_admin == '1' ? 'checked' : '' ); ?>/> <label for="pixtulate_deactivate_for_admin_1"><?php _e('Yes', 'pixtulate'); ?> </label> <br/>
-				  <input type="radio" name="pixtulate_deactivate_for_admin" value="0" <?php echo ( $pixtulate_deactivate_for_admin == '0' ? 'checked' : '' ); ?>/> <label for="pixtulate_deactivate_for_admin_0"><?php _e('No', 'pixtulate'); ?> </label> <br/>
+					<strong>Deactivate Pixtulate for users that are logged in?</strong><br />
+					<input type="radio" name="pixtulate_deactivate_for_admin" value="1" <?php echo ( $pixtulate_deactivate_for_admin == '1' ? 'checked' : '' ); ?>/> <label for="pixtulate_deactivate_for_admin_1"><?php _e('Yes', 'pixtulate'); ?> </label> <br/>
+					<input type="radio" name="pixtulate_deactivate_for_admin" value="0" <?php echo ( $pixtulate_deactivate_for_admin == '0' ? 'checked' : '' ); ?>/> <label for="pixtulate_deactivate_for_admin_0"><?php _e('No', 'pixtulate'); ?> </label> <br/>
 				</p>
 
 				<p id="pixtulate_settings_submit">
@@ -190,7 +188,7 @@ function pixtulate_settings() {
 			</div>
 		</div>
 		<div class="row04">
-			&copy; Pixtulate, 2015. All Rights Reserved. Plugin Version 1.1 <span><a href="http://www.pixtulate.com" target="_blank">Pixtulate</a> | <a href="http://pixtulate.com/docs/index.htm" target="_blank">Docs</a> | <a href="https://pixtulate.desk.com/">Support</a> | <a href="https://wordpress.org/plugins/pixtulate-responsive-images/" target="_blank">WP Plugin</a> | <a href="https://twitter.com/pixtulate" target="_blank">Twitter</a></span>
+			&copy; Pixtulate, 2015. All Rights Reserved. Plugin Version 1.2 <span><a href="http://www.pixtulate.com" target="_blank">Pixtulate</a> | <a href="http://pixtulate.com/docs/index.htm" target="_blank">Docs</a> | <a href="https://pixtulate.desk.com/">Support</a> | <a href="https://wordpress.org/plugins/pixtulate-responsive-images/" target="_blank">WP Plugin</a> | <a href="https://twitter.com/pixtulate" target="_blank">Twitter</a></span>
 		</div>	
 		</form>
 		<div class="pixt_tooltip"></div>
@@ -292,7 +290,7 @@ function pixtulate_filter ( $content ) {
 	$base_url_mod = $base_url_arr[scheme]. '\:\/\/' .$base_url_arr[host]. '\\' .$base_url_arr[path];
 	
 	if($pixtulate_connector == $base_url) 
-		return preg_replace("/(src=\")(.*)([^>]*)(".$base_url_mod."\/)/", "data-$1$3", $content);
+		return preg_replace("/(src=\")(.*)([^>]*)(".$base_url_mod."\/)/", "data-$1$2$3", $content);
 	else 
 		return preg_replace("/(src=\")(.*)([^>]*)(uploads\/)/", "data-$1$3", $content);
 }
@@ -311,7 +309,7 @@ function pixtulate_type_filter ( $content ) {
 		$base_url_mod = $base_url_arr[scheme]. '\:\/\/' .$base_url_arr[host]. '\\' .$base_url_arr[path];
 		
 		if($pixtulate_connector == $base_url) 
-			return preg_replace("/(src=\")(.*)([^>]*)(".$base_url_mod."\/)/", "data-$1$3", $content);
+			return preg_replace("/(src=\")(.*)([^>]*)(".$base_url_mod."\/)/", "data-$1$2$3", $content);
 		else 
 			return preg_replace("/(src=\")(.*)([^>]*)(uploads\/)/", "data-$1$3", $content);
 	}

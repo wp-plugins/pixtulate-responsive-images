@@ -3,7 +3,7 @@ Contributors: kkarski, konisto, sodux
 Tags: responsive images, dynamic images, fluid images, image optimization, crop image, scale image, focal point, cdn
 Donate link:
 Requires at least: 3
-Tested up to: 4
+Tested up to: 4.1
 Stable tag: trunk
 License: MIT
 License URI: http://opensource.org/licenses/MIT
@@ -20,6 +20,8 @@ Pixtulate provides further image enhancements via focal points which ensure imag
 = Docs & Support =
 
 The plugin simplifies configuration and automates certain otherwise manual tasks on WP sites. Please visit our docs section for full [documentation](http://www.pixtulate.com/docs/index.htm). Immediately start optimizing images by [signing up](http://www.pixtulate.com/signup/#?source=wordpress).
+
+Feel free to contact [Support](mailto:support@pixtulate.com) if you have any problems. We want to know about them and fix them.
 
 == Installation ==
 
@@ -48,11 +50,30 @@ Wordpress by default embeds the image's original height and width as attributes 
 
 Simply add a media item to your page or post from your media library. This items should be of the best quality and highest resolution possible. No need to pre-scale or thumbnail beforehand. That's it. The image will be scaled to fit the area where it's located.
 
+**My images are not scaling correctly**
+
+A few possible reasons:
+* Responsive images are scaled to fit their container's size. If you are relying on scaling areas of your page based on the image's size, this will not work. 
+* Are your images loaded using some script? This is frequently the case with sliders or fancy galleries. This plugin will only process images using a standard <img> element.
+* Responsive image's aren't fluid images. If you want fluid images, apply "max-width: 100%" to your image's style
+
 == Screenshots ==
 
-1. Plugin admin area. From here you can directly configure your connector settings and plugin options.
+1. Setup 1. Enter just your Pixtulate domain name (i.e. just: mydomain, not http://mydomain.api.pixtulate.com or similar)
+2. Setup 2. Select the the root path where to load your images from. If you want to optimize images part of your theme or other plugins, select your site's host name. If you just care about images in your media manager for post and pages, select the upload folder.
+3. Setup 3. The default settings are recommended. If your site is secured with SSL, select "Force SSL encryption" to make sure all images are loaded over https.
+4. Setup 4. Choose if you want all images on your site processed or just those contained in posts and pages. "All images" includes logos, theme images, sidebars etc.
+5. Setup 5. Press "Save Plugin Settings" and make sure you get a successful response. If not successful, make sure you have signed up and check your domain name matches that you signed up with.
+6. Posting 1. Select an image to include in a post or page as usual from the media manager
+7. Posting 2. Select full size! Pixtulate will figure out what size to scale your images depending on your viewer's screen size
+8. Posting 3. Click "Insert into post" to include the image. That's it.
+9. Verification: Check your src attribute in your <img> element on the page has changed to something including http://api.pixtulate.com/images/mydomain/....
 
 == Changelog ==
+= 1.2.1 =
+* Fixed regex issues with processing images on nginx
+* Updated setup steps with more screenshots
+
 = 1.2 =
 * Fixed issue with properties not saving correctly
 

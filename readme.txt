@@ -70,6 +70,12 @@ A few possible reasons:
 9. Verification: Check your src attribute in your <img> element on the page has changed to something including http://api.pixtulate.com/images/mydomain/....
 
 == Changelog ==
+= 1.2.2 =
+* Fixed Header error issue
+* Added new validation for domain ids
+* Front-end cosmetic changes
+* Fixed issue with javascript installing before domain was added
+
 = 1.2.1 =
 * Fixed regex issues with processing images on nginx
 * Updated setup steps with more screenshots

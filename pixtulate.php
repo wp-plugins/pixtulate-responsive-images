@@ -3,13 +3,13 @@
  * Plugin Name: Pixtulate
  * Plugin URI: http://www.pixtulate.com/wordpress-plugin
  * Description: The responsive images plugin connects wordpress sites to the on demand image services of Pixtulate. Our image optimization dramatically speeds up websites with image content. The service scales, crops and optimizes responsive images on demand using Pixtulate's servers.
- * Version: 1.2.1
+ * Version: 1.2.2
  * Author: Pixtulate
  * Author URI: https://www.pixtulate.com
  * License: GPL2
  */
 
-/*  Copyright 2014 Pixtulate  (email : support@pixtulate.com)
+/*  Copyright 2015 Pixtulate  (email : support@pixtulate.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as
@@ -33,7 +33,7 @@
 
 defined('ABSPATH') or die("No script kiddies please!");  //don't let people call this script directly
 
-define('PIXTULATE_VERSION', '1.2.1');
+define('PIXTULATE_VERSION', '1.2.2');
 define('PIXTULATE_PLUGIN_URL', plugin_dir_url( __FILE__ ));
 
 load_plugin_textdomain( 'pixtulate', false, basename( dirname( __FILE__ ) ) . '/languages' );  //for localization
@@ -113,8 +113,8 @@ function pixtulate_settings() {
 			<div class="col01">
 				<p class="error">There was a problem updating your connector's configuration. Please make sure to sign up for Pixtulate before configuring the plugin</p>
 				<p id="pixtulate_domain_input">
-				  <label for="pixtulate_domain"><?php _e('Pixtulate Domain', 'pixtulate'); ?> <span class="req">*</span> </label> <a href="https://github.com/pixtulate/pixtulate.js" target="_blank"><img src="<?php echo PIXTULATE_PLUGIN_URL; ?>/images/qlinks.jpg" alt="Pixtulate" title="Pixtulate" /></a><br />
-				  <input type="text" name="pixtulate_domain" id="pixtulate_domain" value="<?php echo $pixtulate_domain; ?>" />
+				  <label for="pixtulate_domain"><?php _e('Pixtulate Account ID', 'pixtulate'); ?> <span class="req">*</span> </label> <a href="https://github.com/pixtulate/pixtulate.js" target="_blank"><img src="<?php echo PIXTULATE_PLUGIN_URL; ?>/images/qlinks.jpg" alt="Pixtulate" title="Pixtulate" /></a><br />
+				  <span>http://</span><input type="text" name="pixtulate_domain" id="pixtulate_domain" value="<?php echo $pixtulate_domain; ?>" /><span>.api.pixtulate.com</span>
 				</p>
 				<p id="pixtulate_connector">
 				  <label for="pixtulate_connect"><?php _e('HTTP Connector Path', 'pixtulate'); ?> <span class="req">*</span> </label> <br />
@@ -188,7 +188,7 @@ function pixtulate_settings() {
 			</div>
 		</div>
 		<div class="row04">
-			&copy; Pixtulate, 2015. All Rights Reserved. Plugin Version 1.2.1 <span><a href="http://www.pixtulate.com" target="_blank">Pixtulate</a> | <a href="http://pixtulate.com/docs/index.htm" target="_blank">Docs</a> | <a href="https://pixtulate.desk.com/">Support</a> | <a href="https://wordpress.org/plugins/pixtulate-responsive-images/" target="_blank">WP Plugin</a> | <a href="https://twitter.com/pixtulate" target="_blank">Twitter</a></span>
+			&copy; Pixtulate, 2015. All Rights Reserved. Plugin Version 1.2.2 <span><a href="http://www.pixtulate.com" target="_blank">Pixtulate</a> | <a href="http://pixtulate.com/docs/index.htm" target="_blank">Docs</a> | <a href="https://pixtulate.desk.com/">Support</a> | <a href="https://wordpress.org/plugins/pixtulate-responsive-images/" target="_blank">WP Plugin</a> | <a href="https://twitter.com/pixtulate" target="_blank">Twitter</a></span>
 		</div>
 		</form>
 		<div class="pixt_tooltip"></div>
@@ -217,7 +217,12 @@ function pixtulate_javascript() {
 
 add_filter('wp_footer', 'pixtulate_func');
 function pixtulate_func() {
+
 	$pixtulate_domain = get_option ( 'pixtulate_domain' );
+
+	if ( ( is_user_logged_in() && $pixtulate_deactivate_for_admin == 1 ) || ! $pixtulate_domain ) //if no domain name is set yet, then we can't do anything for you
+		return;
+	
 	$pixtulate_modifyurl = "true";
 	$pixtulate_constrain = get_option ( 'pixtulate_constrain' );
 	$pixtulate_https = get_option ( 'pixtulate_https' );
@@ -325,4 +330,3 @@ function pixtulate_type_filter ( $content ) {
 	}
 }
 ?>
-
